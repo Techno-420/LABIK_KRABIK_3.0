@@ -37,3 +37,49 @@ def neighbor(open, closed, arr, indexI, indexJ):
 def h(j2,j1,i2,i1):
     return sqrt((j2-j1)**2+(i2-i1)**2)
 
+
+'''
+def min_f(open):
+    
+    ці дві функції доробить
+    
+def reconstruct_path(cameFrom, current)
+'''
+
+def AZIRKA(indIstart,indJstart,indIend,indJend):
+    closed=[]
+    open=[[indIstart,indJstart]]
+    matrixfrom = [[0 for i in range(len(lab))] for j in range(len(lab))]
+    g = [['inf' for i in range(len(lab))] for j in range(len(lab))]
+    g[indIstart][indJstart]=0
+    f=[[True for i in range(len(lab))] for j in range(len(lab))]
+    f[indIstart][indJstart] = h(indJend, indJstart, indIend, indIstart)
+    for i in matrixfrom:
+        print()
+        for j in i:
+            print('%3s'%j, end=' ')
+    for i in g:
+        print()
+        for j in i:
+            print('%3s'%j, end=' ')
+    for i in f:
+        print()
+        for j in i:
+            print('%0.2f'%j, end=' ')
+    curr=min_f(open)                                     ##min_f(open) треба зробить
+    goal=[indIend,indJend]
+    while open:
+        if curr==goal:
+            return reconstruct_path(cameFrom, current)   ##reconstruct_path(cameFrom, current) треба зробить
+
+        del open[open.index(curr)]
+        for neighbour in neighbor(open, closed, lab, curr[0], curr[1]):
+            temp_g=g[curr[0]][curr[1]]+1
+            if neighbour not in open or temp_g<g[neighbour[0]][neighbour[1]]:
+                matrixfrom[neighbour[0]][neighbour[1]]=curr
+                g[neighbour[0]][neighbour[1]]=temp_g
+                f[neighbour[0]][neighbour[1]]=g[neighbour[0]][neighbour[1]]+h(indJend,neighbour[1],indIend,neighbour[0])
+                if neighbour not in open:
+                    open.append(neighbour)
+
+AZIRKA(6,1,1,6,)
