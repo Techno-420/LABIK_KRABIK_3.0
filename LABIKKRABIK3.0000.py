@@ -16,7 +16,7 @@ for line in lab:
     for el in line:
         print(el,end=' ')
 
+    return neighborindex
 def h(j2,j1,i2,i1):
     return sqrt((j2-j1)**2+(i2-i1)**2)
-
 
