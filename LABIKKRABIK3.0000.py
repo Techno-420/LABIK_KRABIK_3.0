@@ -1,0 +1,1 @@
+labirint = open('labirint.txt','r')
