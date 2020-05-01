@@ -16,7 +16,24 @@ for line in lab:
     for el in line:
         print(el,end=' ')
 
+
+def neighbor(open, closed, arr, indexI, indexJ):
+    neighborindex = []
+    neighborindex.append([indexI - 1,indexJ])
+    neighborindex.append([indexI + 1,indexJ])
+    neighborindex.append([indexI,indexJ+1])
+    neighborindex.append([indexI,indexJ-1])
+    for i in range(len(neighborindex)):
+        el = arr[neighborindex[i][0]][neighborindex[i][1]]
+        if (el in open) or (el in closed) or (el=='x'):
+            neighborindex[i] = 0
+    while 0 in neighborindex:
+        for el in neighborindex:
+            if el == 0:
+                del neighborindex[neighborindex.index(el)]
     return neighborindex
+
+
 def h(j2,j1,i2,i1):
     return sqrt((j2-j1)**2+(i2-i1)**2)
 
