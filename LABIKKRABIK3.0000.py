@@ -1,3 +1,4 @@
+from math import sqrt
 labirint = open('labirint.txt','r')
 lab = []
 for lines in labirint:
@@ -14,5 +15,8 @@ for line in lab:
     print()
     for el in line:
         print(el,end=' ')
+
+def h(j2,j1,i2,i1):
+    return sqrt((j2-j1)**2+(i2-i1)**2)
 
 
