@@ -10,10 +10,10 @@ for i in range(len(lab)):
     del lab[i][0]
 n,m = map(int, input("Введите индексы старта:").split())
 k,l = map(int, input("Введите индексы финиша:").split())
-lab[n][m],lab[k][l] = 0,1
+lab[n][m],lab[k][l] = 0,2
 
 
-def neighbor(open, closed, arr, indexI, indexJ):
+def neighbor(closed, arr, indexI, indexJ):
     neighborindex = []
     neighborindex.append([indexI - 1,indexJ])
     neighborindex.append([indexI + 1,indexJ])
@@ -33,15 +33,25 @@ def neighbor(open, closed, arr, indexI, indexJ):
 def h(j2,j1,i2,i1):
     return sqrt((j2-j1)**2+(i2-i1)**2)
 
-
-def minf(fmatr,gmatr,neib,indI,indJ,closed,cur):
+def back_Up(closed,lab,pathi):
+    for i in range(len(closed)):
+        neib = neighbor(closed,lab,closed[len(closed)-i-1][0],closed[len(closed)-i-1][1])
+        pathi[closed[len(closed)-i-1][0]][closed[len(closed)-i-1][1]] = ' '
+        if len(neib)==0:
+            pass
+        else:
+            return [closed[len(closed)-i-1][0],closed[len(closed)-i-1][1]]
+def minf(fmatr,gmatr,indI,indJ,closed,cur,pathi):
     f_arr = []
+    neib = neighbor(closed,lab,cur[0],cur[1])
     if len(neib)==1:
         gmatr[neib[0][0]][neib[0][1]] = gmatr[cur[0]][cur[1]] + 1
         fmatr[neib[0][0]][neib[0][1]] = gmatr[neib[0][0]][neib[0][1]] + h(indI, neib[0][0], indJ, neib[0][1])
         indexI = neib[0][0]
         indexJ = neib[0][1]
-    else:
+        pathi[indexI][indexJ] = 1
+        return [indexI, indexJ]
+    elif len(neib)>1:
         for neibhor in neib:
             gmatr[neibhor[0]][neibhor[1]] = gmatr[cur[0]][cur[1]] + 1
             fmatr[neibhor[0]][neibhor[1]] = gmatr[neibhor[0]][neibhor[1]] + h(indI, neibhor[0], indJ, neibhor[1])
@@ -49,49 +59,39 @@ def minf(fmatr,gmatr,neib,indI,indJ,closed,cur):
         el = min(f_arr)
         for i in range(len(fmatr)):
             for j in range(len(fmatr[i])):
-                if fmatr[i][j] == el:
+                if fmatr[i][j] == el and [i,j] != cur:
                     indexI = i
                     indexJ = j
-        for neibhor in neib:
-            if neibhor != [indexI, indexJ]:
-                closed.append(neibhor)
-    return [indexI,indexJ]
+                    break
+        pathi[indexI][indexJ] = 1
+        return [indexI, indexJ]
+    elif len(neib)==0:
+        curent = back_Up(closed,lab,pathi)
+        pathi[curent[0]][curent[1]]=1
+        return curent
 
 
 def AZIRKA(indIstart,indJstart,indIend,indJend,labirint):
     closed=[]
     open=[[indIstart,indJstart]]
+    path = labirint
     g = [[0 for i in range(len(lab))] for j in range(len(lab))]
     g[indIstart][indJstart] = 0
     f = [[0 for i in range(len(lab))] for j in range(len(lab))]
     f_arr = []
-    count = 0
     f[indIstart][indJstart] = h(indJend, indJstart, indIend, indIstart)
     curr=[indIstart, indJstart]
     goal=[indIend,indJend]
     while open:
         if curr == goal:
-            labirint[goal[0]][goal[1]] = chr(87+count)
-            for line in labirint:
+            path[curr[0]][curr[1]] = 2
+            for line in path:
                 print()
                 for el in line:
                     print(el, end=' ')
             break
-        neibh = neighbor(open,closed,labirint,curr[0],curr[1])
-        curr = minf(f,g,neibh,indIend,indJend,closed,curr)
+        curr = minf(f,g,indIend,indJend,closed,curr,path)
         open.append(curr)
         closed.append(open[0])
         del open[0]
-        if count<9:
-            labirint[curr[0]][curr[1]] = chr(49+count)
-        else:
-            labirint[curr[0]][curr[1]] = chr(88+count)
-        count+=1
-
-
 AZIRKA(n,m,k,l,lab)
-
-
-
-
-
