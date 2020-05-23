@@ -15,13 +15,30 @@ lab[n][m],lab[k][l] = 0,2
 
 def neighbor(closed, arr, indexI, indexJ):
     neighborindex = []
-    neighborindex.append([indexI - 1,indexJ])
-    neighborindex.append([indexI + 1,indexJ])
-    neighborindex.append([indexI,indexJ+1])
-    neighborindex.append([indexI,indexJ-1])
+    if (indexI == 0):
+        neighborindex.append([indexI + 1, indexJ])
+        neighborindex.append([indexI, indexJ + 1])
+        neighborindex.append([indexI, indexJ - 1])
+    elif (indexI == len(arr)-1):
+        neighborindex.append([indexI - 1, indexJ])
+        neighborindex.append([indexI, indexJ + 1])
+        neighborindex.append([indexI, indexJ - 1])
+    elif (indexJ == 0):
+        neighborindex.append([indexI - 1, indexJ])
+        neighborindex.append([indexI + 1, indexJ])
+        neighborindex.append([indexI, indexJ + 1])
+    elif (indexJ == len(arr))-1:
+        neighborindex.append([indexI - 1, indexJ])
+        neighborindex.append([indexI + 1, indexJ])
+        neighborindex.append([indexI, indexJ - 1])
+    else:
+        neighborindex.append([indexI - 1, indexJ])
+        neighborindex.append([indexI + 1, indexJ])
+        neighborindex.append([indexI, indexJ + 1])
+        neighborindex.append([indexI, indexJ - 1])
     for i in range(len(neighborindex)):
         el = arr[neighborindex[i][0]][neighborindex[i][1]]
-        if  ([neighborindex[i][0],neighborindex[i][1]] in closed) or (isinstance(el, str)==True and el != ' '):
+        if  ([neighborindex[i][0],neighborindex[i][1]] in closed):
             neighborindex[i] = 0
     while 0 in neighborindex:
         for el in neighborindex:
@@ -53,9 +70,14 @@ def minf(fmatr,gmatr,indI,indJ,closed,cur,pathi):
         return [indexI, indexJ]
     elif len(neib)>1:
         for neibhor in neib:
-            gmatr[neibhor[0]][neibhor[1]] = gmatr[cur[0]][cur[1]] + 1
-            fmatr[neibhor[0]][neibhor[1]] = gmatr[neibhor[0]][neibhor[1]] + h(indI, neibhor[0], indJ, neibhor[1])
-            f_arr.append(fmatr[neibhor[0]][neibhor[1]])
+            if lab[neibhor[0]][neibhor[1]] == 'x':
+                gmatr[neibhor[0]][neibhor[1]] = gmatr[cur[0]][cur[1]] + 5
+                fmatr[neibhor[0]][neibhor[1]] = gmatr[neibhor[0]][neibhor[1]] + h(indI, neibhor[0], indJ, neibhor[1])
+                f_arr.append(fmatr[neibhor[0]][neibhor[1]])
+            else:
+                gmatr[neibhor[0]][neibhor[1]] = gmatr[cur[0]][cur[1]] + 1
+                fmatr[neibhor[0]][neibhor[1]] = gmatr[neibhor[0]][neibhor[1]] + h(indI, neibhor[0], indJ, neibhor[1])
+                f_arr.append(fmatr[neibhor[0]][neibhor[1]])
         el = min(f_arr)
         for i in range(len(fmatr)):
             for j in range(len(fmatr[i])):
@@ -66,6 +88,7 @@ def minf(fmatr,gmatr,indI,indJ,closed,cur,pathi):
         pathi[indexI][indexJ] = 1
         return [indexI, indexJ]
     elif len(neib)==0:
+        pathi[cur[0]][cur[1]] = " "
         curent = back_Up(closed,lab,pathi)
         pathi[curent[0]][curent[1]]=1
         return curent
